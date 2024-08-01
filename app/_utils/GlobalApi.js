@@ -15,9 +15,7 @@ async function hashPassword(password) {
 
 // Your GraphQL request code here
 
-const MASTER_URL =
-  "https://ap-south-1.cdn.hygraph.com/content/clyhcz5f101j607w9xw0knwu7/master";
-
+const MASTER_URL =process.env.NEXT_PUBLIC_BACKEND_URL
 /**
  * @returns
  */
