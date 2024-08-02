@@ -1,6 +1,7 @@
 import { gql, request } from "graphql-request";
 import bcrypt from "bcryptjs"; // Function to hash a password using bcrypt
-import { useSignUp } from "@clerk/nextjs";
+
+
 async function hashPassword(password) {
   const saltRounds = 10; // Salt rounds for bcrypt hashing
 
@@ -13,9 +14,11 @@ async function hashPassword(password) {
   }
 }
 
+
 // Your GraphQL request code here
 
-const MASTER_URL =process.env.NEXT_PUBLIC_BACKEND_URL
+const MASTER_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 /**
  * @returns
  */
@@ -37,24 +40,27 @@ export const GetCategory = async () => {
   return result;
 };
 
-export const submitContactForm = async (formValue, userEmail) => {
+export const submitContactForm = async (formValue, email,file) => {
   const hashedPassword = await hashPassword(formValue.password);
-  const mutationQuery = gql`
-    mutation CreateRestro(
-      $name: String!
-      $aboutUs: String!
-      $password: String!
-      $userEmail: String!
-    ) {
+  const query = gql`
+    mutation MyMutation {
       createRestro(
         data: {
-          name: $name
-          aboutUs: $aboutUs
-          password: $password
-          restroUser: { create: { email: $userEmail } }
+        
+          name: "`+formValue.name+`"
+          slug:"`+formValue.name.toLowerCase()+`"
+          aboutUs: "`+formValue.aboutUs+`"
+          password: "`+hashedPassword+`"
+          restroType: top
+          address:"`+formValue.address+`"
+          workingHours: "`+formValue.workingHours+`"
+          restroUser: { create: { email: "`+email+`" } }
+          category: {connect: {slug: "all"}}
+          image: "`+file+`"
         }
       ) {
         id
+        image
       }
       publishManyRestros(to: PUBLISHED) {
         count
@@ -62,15 +68,8 @@ export const submitContactForm = async (formValue, userEmail) => {
     }
   `;
 
-  const variables = {
-    name: formValue.name,
-    aboutUs: formValue.aboutUs,
-    password: hashedPassword,
-    userEmail: userEmail,
-  };
-
-  const response = await request(MASTER_URL, mutationQuery, variables);
-  return response;
+  const result = await request(MASTER_URL, query);
+  return result;
 };
 
 export const getRestaurantLogin = async (formValue) => {
@@ -108,6 +107,7 @@ export const getTopRestros = async (category) => {
         address
         restroType
         workingHours
+        image
         banner {
           url
         }
@@ -134,6 +134,7 @@ export const GetBuiesnessDetails = async (buisnessSlug) => {
         banner {
           url
         }
+        image
         category {
           name
         }
@@ -346,13 +347,19 @@ export const createNewOrder = async (data) => {
   return result;
 };
 
-export const updateOrderItems = async (name, counts,price, id, email) => {
+export const updateOrderItems = async (name, counts, price, id, email) => {
   const query =
     gql`
     mutation MyMutation {
       updateOrder(
-    data: {orderDetails: {create: {OrderItem: {data:{countItems: ${counts}, name: "`+name+`", price: `+price+`}}}}}
-    where: {id: "`+id+`"}
+    data: {orderDetails: {create: {OrderItem: {data:{countItems: ${counts}, name: "` +
+    name +
+    `", price: ` +
+    price +
+    `}}}}}
+    where: {id: "` +
+    id +
+    `"}
   ) {
     id
   }
@@ -373,12 +380,13 @@ export const updateOrderItems = async (name, counts,price, id, email) => {
   return result;
 };
 
-
 export const getOrders = async (email) => {
   const query =
     gql`
     query MyQuery {
-  orders(where: {email: "`+email+`"}, orderBy: createdAt_DESC) {
+  orders(where: {email: "` +
+    email +
+    `"}, orderBy: createdAt_DESC) {
     address
     createdAt
     email

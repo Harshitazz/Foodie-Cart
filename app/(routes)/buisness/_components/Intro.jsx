@@ -24,7 +24,7 @@ function Intro({ restaurant }) {
 
             <div className="rounded-lg p-6 bg-gradient-to-b from-transparent to-gray-300">
                 <div className="flex  flex-col  bg-white border border-gray-200 rounded-lg shadow md:gap-4 md:flex-row md:w-[50rem] hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-                    <img className="object-cover p-1 rounded-t-lg h-96 md:h-[250px] md:rounded-none md:rounded-s-lg" src={restaurant.banner?.url} alt="" />
+                    <img className="object-cover p-1 rounded-t-lg h-96 md:h-[250px] md:rounded-none md:rounded-s-lg" src={restaurant?.banner?.url || restaurant?.image} alt="" />
                     <div className="flex flex-col my-2 w-full p-4 ">
                         <h5 className=" text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{restaurant.name}</h5>
                         <h2 className='text-red-600 font-semibold '>

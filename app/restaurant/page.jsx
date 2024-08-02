@@ -13,8 +13,8 @@ const Restaurant = () => {
 
       <button onClick={() => setLogin(!login)} className="text-blue-500 mb-8">
         {login
-          ? "Do not have account? Signup"
-          : "Already have an Account? Login"}
+          ? "Do not have Restaurant? Signup"
+          : "Already have an Restaurant? Login"}
       </button>
     </div>
     </>
