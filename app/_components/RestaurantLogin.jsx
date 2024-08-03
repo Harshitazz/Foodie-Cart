@@ -17,7 +17,6 @@ export default function RestaurantLogin() {
   });
 
   const handleChange = (e) => {
-    console.log(user.emailAddresses[0].emailAddress)
     setFormValue({
       ...formValue,
       [e.target.name]: e.target.value,
@@ -36,7 +35,6 @@ export default function RestaurantLogin() {
       });
 
       const restaurant = res.restros[0];
-      console.log(restaurant)
       if (restaurant) {
         const passwordMatch = await bcrypt.compare(formValue.password, restaurant.password);
         if (passwordMatch) {

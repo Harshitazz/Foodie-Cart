@@ -26,7 +26,6 @@ function CategoryList() {
 
   const getCategoryList = () => {
     GetCategory().then(resp => {
-      console.log(resp)
       setCategories(resp.categories);
     })
   }

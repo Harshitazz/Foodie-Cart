@@ -42,9 +42,7 @@ function Page() {
             .then(resp => {
                 setCart(resp?.userCarts);
                 totalPrice(resp?.userCarts);
-                console.log(resp)
-                console.log(user)
-                console.log(updateCart)
+                
 
             })
             .catch(err => {
@@ -75,11 +73,7 @@ function Page() {
     
     const addToOrder = (billingDetails) => {
         setLoading(true);
-        console.log('Phone:', phone);
-        // if(!(address||phone||zip)){
-        //     toast("fields empty")
-        //     return
-        // }
+        
         const data = {
             email: user?.emailAddresses[0].emailAddress,
             orderAmount: totalBill,
@@ -97,12 +91,11 @@ function Page() {
                 aggregatedCart.forEach((item) => {
                     updateOrderItems(item.productName, item.count,item.price, resultId, user?.emailAddresses[0].emailAddress)
                         .then(result => {
-                            console.log(result)
                             setLoading(false)
                             toast('order created')
                             setUpdateCart(!!!updateCart)
                             SendEmail()
-                            router.replace('/confirmation')
+                            router.replace('/users#/my-orders')
                             // setsubmit(true)
                         }, (error) => {
                             console.log('eerfrenffdfndr')
@@ -153,8 +146,7 @@ function Page() {
                 zip: details.purchase_units[0].shipping.address.postal_code
             }
             addToOrder(billingDetails);
-            console.log(billingDetails.address)
-            console.log(billingDetails.zip)
+            
         });
 
     };

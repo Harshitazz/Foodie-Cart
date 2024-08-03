@@ -42,7 +42,7 @@ function MyOrders() {
                 <AccordionContent>
                   <div>
                     {order?.orderDetails?.map((item, index) => (
-                      <div className='flex justify-between'>
+                      <div className='flex justify-between' key={index}>
                         <h2>{item.name}</h2>
                         <div className='flex'>
                           <h2>{item.countItems}</h2>

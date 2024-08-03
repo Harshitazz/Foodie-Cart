@@ -5,6 +5,7 @@ import { useUser } from "@clerk/clerk-react";
 import { submitContactForm } from "../_utils/GlobalApi";
 import { useRouter } from "next/navigation";
 import './ImageElement.css'
+import Link from "next/link";
 export default function RestaurantSignup() {
   const { user } = useUser();
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function RestaurantSignup() {
     c_password: "",
     address: "",
     workingHours: "",
-   
+    file: ""
   });
   const [passwordError, setPasswordError] = useState(false);
 
@@ -33,10 +34,8 @@ export default function RestaurantSignup() {
   const postDetails = (pics) => {
     setPicLoading(true);
     if (pics === undefined) {
-      console.log("file not uploaded")
       return;
     }
-    console.log(pics);
     if (pics.type === "image/jpeg" || pics.type === "image/png") {
       const data = new FormData();
       data.append("file", pics);
@@ -50,7 +49,6 @@ export default function RestaurantSignup() {
         .then((data) => {
           setPic(data.url.toString());
           setPreviewUrl(data.url.toString());
-          console.log(data.url.toString());
           setPicLoading(false);
         })
         .catch((err) => {
@@ -69,11 +67,10 @@ export default function RestaurantSignup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formValue.password !== formValue.c_password) {
-      setPasswordError(true)
-      return false
+      setPasswordError(true);
+      return false;
     }
     try {
-      console.log( user.emailAddresses[0].emailAddress)
       const res = await submitContactForm(formValue, user.emailAddresses[0].emailAddress, pic);
       setFormValue({
         name: "",
@@ -82,12 +79,10 @@ export default function RestaurantSignup() {
         c_password: "",
         address: "",
         workingHours: "",
-        
+        file: ""
       });
       setSubmitted(true);
-      console.log(res)
       localStorage.setItem("restaurantId", JSON.stringify(res.createRestro));
-      router.push("/");
       return res;
     } catch (e) {
       console.error("Error occurred:", e);
@@ -101,6 +96,8 @@ export default function RestaurantSignup() {
       ...formValue,
       [e.target.name]: e.target.value,
     });
+    const userData = JSON.parse(localStorage.getItem('restaurantId'))
+
   };
 
 
@@ -119,7 +116,7 @@ export default function RestaurantSignup() {
             onChange={(e) => postDetails(e.target.files[0])}
           />
           <div className={`image-upload center`}>
-            
+
             <div className="image-upload__preview" onClick={pickImageHandler}>
               {previewUrl && <img src={previewUrl} alt="Preview" />}
               {!previewUrl && <p>Please pick a Restaurant Pic.</p>}
@@ -202,7 +199,7 @@ export default function RestaurantSignup() {
               />
             </div>
 
-          
+
 
             <div className="mb-5">
               <label
@@ -249,12 +246,22 @@ export default function RestaurantSignup() {
 
 
             <div>
+              {/*  */}
               <button
+
                 type="submit"
                 className="block rounded-md bg-green-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-green-700"
               >
                 Submit
               </button>
+              {/* </Link> */}
+              {
+                submitted && (
+                  <Link href={'restaurant/' + JSON.parse(localStorage.getItem('restaurantId')).id}>
+                    add food item
+                  </Link>
+                )
+              }
             </div>
           </div>
         </form>

@@ -40,27 +40,28 @@ export const GetCategory = async () => {
   return result;
 };
 
-export const submitContactForm = async (formValue, email,file) => {
+
+export const submitContactForm = async (formValue, email, file) => {
   const hashedPassword = await hashPassword(formValue.password);
+  const slug = formValue.name.toLowerCase().replace(/\s+/g, '-');
   const query = gql`
     mutation MyMutation {
       createRestro(
         data: {
-        
-          name: "`+formValue.name+`"
-          slug:"`+formValue.name.toLowerCase()+`"
-          aboutUs: "`+formValue.aboutUs+`"
-          password: "`+hashedPassword+`"
+          name: "${formValue.name}"
+          aboutUs: "${formValue.aboutUs}"
+          password: "${hashedPassword}"
           restroType: top
-          address:"`+formValue.address+`"
-          workingHours: "`+formValue.workingHours+`"
-          restroUser: { create: { email: "`+email+`" } }
-          category: {connect: {slug: "all"}}
-          image: "`+file+`"
+          address: "${formValue.address}"
+          workingHours: "${formValue.workingHours}"
+          restroUser: { create: { email: "${email}" } }
+          category: { connect: { slug: "all" } }
+          image: "${file}"
+          slug: "${slug}"
         }
       ) {
         id
-        image
+        name
       }
       publishManyRestros(to: PUBLISHED) {
         count
@@ -71,6 +72,7 @@ export const submitContactForm = async (formValue, email,file) => {
   const result = await request(MASTER_URL, query);
   return result;
 };
+
 
 export const getRestaurantLogin = async (formValue) => {
   const query = gql`

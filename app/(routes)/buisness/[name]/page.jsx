@@ -39,9 +39,7 @@ function Page() {
     const getCart = () => {
         
             GetUserCart(user?.emailAddresses[0].emailAddress,param.split('/')[2] ).then(resp => {
-                console.log(resp)
-                console.log(user)
-                console.log(updateCart)
+                
                 setCart(resp?.userCarts);
                 
             }).catch(err => {

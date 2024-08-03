@@ -25,16 +25,13 @@ function ReviewSection({ restaurant }) {
         }
 
         AddNewReview(data).then(resp => {
-            console.log(resp)
             alert('Review Added!')
             resp && getReviewList()
         })
-        console.log(user)
     }
 
     const getReviewList = () => {
         getRestroReview(restaurant.slug).then(resp => {
-            console.log(resp)
             setReviewList(resp.reviews)
         }
         )

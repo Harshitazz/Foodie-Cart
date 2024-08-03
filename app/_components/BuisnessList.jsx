@@ -27,7 +27,6 @@ const BuisnessList = () => {
   const getBuisnessList=(c)=>{
     setLoading(true)
     getTopRestros(c).then(resp=>{
-      console.log(resp)
       setBuisnessList(resp)
       setLoading(false)
     })
